@@ -2,7 +2,7 @@
 -- Parameters
 --
 
-local MAX_SPEED_FORWARD = 80
+local MAX_SPEED_FORWARD = 130
 local MAX_SPEED_REVERSE = 20
 local ACCELERATION = 8
 local BRAKING = 4
