@@ -1,8 +1,8 @@
 local MAX_SPEED = 0
 local MAX_SPEED_FORWARD = 130
 local MAX_SPEED_REVERSE = 30
-local ACCELERATION = 16
-local BRAKING = 8
+local ACCELERATION = 8
+local BRAKING = 4
 local TURN_SPEED = 4
 local RETARDATION = 0.05
 
@@ -51,13 +51,21 @@ local car_f1 = {
 function car_f1:on_rightclick(clicker)
   if not clicker or not clicker:is_player() then return end
   if not self.driver then
-    clicker:set_attach(self.object, "", {x=-2, y=-3, z=0}, {x=0, y=90, z=0})
+    clicker:set_attach(self.object, "", {x=-2, y=-1, z=0}, {x=0, y=90, z=0})
     clicker:set_properties({visual_size={x=0.3, y=0.3, z=0.3}, eye_height=0.3})
+
+    default.player_attached[clicker:get_player_name()] = true
+    minetest.after(0.2, function() -- we must do this because of bug
+      default.player_set_animation(clicker, "sit" , 1)
+    end)
+
     self.object:set_yaw(clicker:get_look_horizontal() - math.rad(270))
     self.driver = clicker
   elseif clicker == self.driver then
     clicker:set_detach()
-    clicker:set_properties({visual_size = {x=1, y=1, z=1}, eye_height=1.625})
+    clicker:set_properties({visual_size = {x=1, y=1, z=1}, eye_height=1.4700000286102})
+    default.player_attached[clicker:get_player_name()] = false
+	  default.player_set_animation(clicker, "stand" , 30)
     self.driver = nil
   end
 end
@@ -73,6 +81,9 @@ function car_f1:on_punch(puncher, time_from_last_punch, tool_capabilities, direc
   self.object:remove()
   if puncher and puncher:is_player() then
     puncher:get_inventory():add_item("main", "car_f1:car_f1")
+    puncher:set_properties({visual_size = {x=1, y=1, z=1}, eye_height=1.4700000286102})
+    default.player_attached[puncher:get_player_name()] = false
+	  default.player_set_animation(puncher, "stand" , 30)
   end
 end
 
@@ -168,3 +179,19 @@ minetest.register_craftitem("car_f1:car_f1", {
     return itemstack
   end,
 })
+minetest.register_craft({
+	output = "car_f1:car_f1",
+	recipe = {
+		{"", "", "default:glass"},
+		{"default:steelblock", "default:steelblock", "default:steelblock"}
+	},
+})
+--[[minetest.register_craft({
+  output = "car_f1:car_f1",
+  recipe = {
+      {"technic:chromium_ingot", "technic:chromium_ingot", "technic:chromium_ingot"},
+      {"farming:bottle_ethanol", "technic:carbon_steel_block", "farming:bottle_ethanol"},
+      {"technic:rubber", "technic:carbon_steel_block", "technic:rubber"}
+  },
+}) ]]--
+
