@@ -1,9 +1,9 @@
 local MAX_SPEED = 0
 local MAX_SPEED_FORWARD = 130
 local MAX_SPEED_REVERSE = 30
-local ACCELERATION = 8
-local BRAKING = 4
-local TURN_SPEED = 2
+local ACCELERATION = 16
+local BRAKING = 8
+local TURN_SPEED = 4
 local RETARDATION = 0.05
 
 --[[
